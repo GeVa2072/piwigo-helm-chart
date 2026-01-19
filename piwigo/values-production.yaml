@@ -1,8 +1,8 @@
 # Example values for production deployment with ingress and external database
 
-# Use specific version instead of latest
+# Use specific version tag for production
 image:
-  tag: "latest"
+  tag: "14.5.0-ls266"  # Replace with your desired version
 
 # Enable ingress with TLS
 ingress:

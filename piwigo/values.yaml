@@ -8,7 +8,8 @@ image:
   repository: lscr.io/linuxserver/piwigo
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  # It's recommended to use a specific version instead of "latest" for production
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""

@@ -45,7 +45,7 @@ Le tableau suivant liste les paramètres configurables du chart Piwigo et leurs 
 | Paramètre | Description | Défaut |
 |-----------|-------------|--------|
 | `image.repository` | Repository de l'image Piwigo | `lscr.io/linuxserver/piwigo` |
-| `image.tag` | Tag de l'image | `latest` |
+| `image.tag` | Tag de l'image. Si vide, utilise appVersion du Chart.yaml. **Important:** Utilisez une version spécifique (ex: `14.5.0-ls266`) en production au lieu de `latest` | `""` (utilise appVersion) |
 | `image.pullPolicy` | Politique de pull de l'image | `IfNotPresent` |
 | `imagePullSecrets` | Secrets pour pull les images | `[]` |
 
