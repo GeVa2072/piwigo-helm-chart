@@ -1,0 +1,35 @@
+name: Lint and Test Helm Chart
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.19.4
+
+      - name: Lint Helm Chart
+        run: |
+          helm lint piwigo
+
+      - name: Template Helm Chart
+        run: |
+          helm template test-release piwigo
+          helm template test-release piwigo --set ingress.enabled=true
+          helm template test-release piwigo --set database.enabled=true

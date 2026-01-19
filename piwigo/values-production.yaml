@@ -1,0 +1,60 @@
+# Example values for production deployment with ingress and external database
+
+# Use specific version instead of latest
+image:
+  tag: "latest"
+
+# Enable ingress with TLS
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+  hosts:
+    - host: photos.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: piwigo-tls
+      hosts:
+        - photos.example.com
+
+# Configure resources
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# Use external MySQL/MariaDB database
+database:
+  enabled: true
+  type: mysql
+  host: mysql.database.svc.cluster.local
+  port: 3306
+  name: piwigo
+  user: piwigo
+  # It's better to use existingSecret instead of password
+  existingSecret: piwigo-db-secret
+  existingSecretPasswordKey: password
+
+# Configure persistent storage
+persistence:
+  config:
+    enabled: true
+    storageClass: "fast-ssd"
+    size: 2Gi
+  gallery:
+    enabled: true
+    storageClass: "standard"
+    size: 100Gi
+
+# Set your timezone
+env:
+  TZ: "Europe/Paris"
+  PUID: "1000"
+  PGID: "1000"
