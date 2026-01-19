@@ -55,6 +55,8 @@ Les paramètres suivants peuvent être configurés dans `values.yaml` :
 | `mariadb.persistence.enabled` | Activer la persistance | `true` |
 | `mariadb.persistence.size` | Taille du volume | `8Gi` |
 
+> **⚠️ SÉCURITÉ**: Les identifiants par défaut (`u`, `p`, `d`) sont prévus pour le développement/test uniquement. Pour un environnement de production, **TOUJOURS** les remplacer par des valeurs sécurisées.
+
 ## Exemple de configuration personnalisée
 
 ```yaml

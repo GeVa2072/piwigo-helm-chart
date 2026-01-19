@@ -24,26 +24,43 @@ spec:
         - name: MARIADB_RANDOM_ROOT_PASSWORD
           value: "{{ .Values.mariadb.auth.randomRootPassword }}"
         - name: MARIADB_USER
-          value: "{{ .Values.mariadb.auth.username }}"
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "piwigo.mariadb.fullname" . }}-secret
+              key: mariadb-user
         - name: MARIADB_PASSWORD
-          value: "{{ .Values.mariadb.auth.password }}"
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "piwigo.mariadb.fullname" . }}-secret
+              key: mariadb-password
         - name: MARIADB_DATABASE
-          value: "{{ .Values.mariadb.auth.database }}"
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "piwigo.mariadb.fullname" . }}-secret
+              key: mariadb-database
         - name: TZ
           value: "{{ .Values.mariadb.timezone }}"
         ports:
         - name: mysql
           containerPort: 3306
           protocol: TCP
-        {{- if .Values.mariadb.persistence.enabled }}
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
-        {{- end }}
-      {{- if .Values.mariadb.persistence.enabled }}
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: {{ include "piwigo.mariadb.fullname" . }}
+  {{- if .Values.mariadb.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        {{- include "piwigo.mariadb.labels" . | nindent 8 }}
+    spec:
+      accessModes:
+        - {{ .Values.mariadb.persistence.accessMode }}
+      resources:
+        requests:
+          storage: {{ .Values.mariadb.persistence.size }}
+      {{- if .Values.mariadb.persistence.storageClass }}
+      storageClassName: {{ .Values.mariadb.persistence.storageClass }}
       {{- end }}
+  {{- end }}
 {{- end }}
