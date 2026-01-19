@@ -19,7 +19,8 @@ helm install my-piwigo ./piwigo
 
 ## Documentation
 
-Pour plus d'informations sur la configuration et l'utilisation, consultez le [README du chart](piwigo/README.md).
+- [Guide de démarrage rapide](QUICKSTART.md) - Exemples d'installation courants
+- [README du chart](piwigo/README.md) - Configuration complète et paramètres
 
 ## Fonctionnalités
 
