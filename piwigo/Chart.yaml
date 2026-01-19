@@ -1,0 +1,18 @@
+apiVersion: v2
+name: piwigo
+description: A Helm chart for Piwigo photo gallery software
+type: application
+version: 0.1.0
+appVersion: "latest"
+icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/piwigo-banner.png
+keywords:
+  - piwigo
+  - photo
+  - gallery
+  - media
+home: https://github.com/GeVa2072/piwigo-helm-chart
+sources:
+  - https://github.com/linuxserver/docker-piwigo
+  - https://github.com/Piwigo/Piwigo
+maintainers:
+  - name: GeVa2072
