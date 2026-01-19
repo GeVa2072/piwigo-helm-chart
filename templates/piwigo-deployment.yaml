@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "piwigo.fullname" . }}
+  labels:
+    {{- include "piwigo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "piwigo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "piwigo.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: piwigo
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        image: "{{ .Values.piwigo.image.repository }}:{{ .Values.piwigo.image.tag }}"
+        imagePullPolicy: {{ .Values.piwigo.image.pullPolicy }}
+        env:
+        - name: TZ
+          value: "{{ .Values.piwigo.timezone }}"
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.piwigo.persistence.gallery.enabled }}
+        - name: gallery
+          mountPath: /var/www/html/piwigo/
+        {{- end }}
+        {{- if .Values.piwigo.persistence.script.enabled }}
+        - name: script
+          mountPath: /usr/local/bin/scripts/
+        {{- end }}
+      volumes:
+      {{- if .Values.piwigo.persistence.gallery.enabled }}
+      - name: gallery
+        persistentVolumeClaim:
+          claimName: {{ include "piwigo.fullname" . }}-gallery
+      {{- end }}
+      {{- if .Values.piwigo.persistence.script.enabled }}
+      - name: script
+        persistentVolumeClaim:
+          claimName: {{ include "piwigo.fullname" . }}-script
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

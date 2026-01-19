@@ -1,0 +1,73 @@
+replicaCount: 1
+
+piwigo:
+  image:
+    repository: piwigo/piwigo
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    port: 80
+  
+  timezone: "FR"
+  
+  persistence:
+    gallery:
+      enabled: true
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 10Gi
+    script:
+      enabled: true
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+
+mariadb:
+  enabled: true
+  image:
+    repository: docker.io/library/mariadb
+    pullPolicy: IfNotPresent
+    tag: "lts"
+  
+  service:
+    type: ClusterIP
+    port: 3306
+  
+  auth:
+    randomRootPassword: true
+    username: u
+    password: p
+    database: d
+  
+  timezone: "FR"
+  
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
