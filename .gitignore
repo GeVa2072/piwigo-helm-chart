@@ -1,0 +1,19 @@
+# Helm chart build artifacts
+*.tgz
+charts/
+
+# Temporary files
+/tmp/
+*.tmp
+*.swp
+*.bak
+*~
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,49 @@
+# Example custom values for Piwigo Helm Chart
+# Copy this file and modify it according to your needs
+# Usage: helm install my-piwigo . -f values-example.yaml
+
+# Customize Piwigo application
+piwigo:
+  # Change timezone (e.g., "Europe/Paris", "America/New_York", "Asia/Tokyo")
+  timezone: "Europe/Paris"
+  
+  # Expose Piwigo via LoadBalancer (for cloud deployments)
+  service:
+    type: LoadBalancer
+    # type: NodePort  # Alternative option
+  
+  # Adjust storage sizes
+  persistence:
+    gallery:
+      enabled: true
+      size: 50Gi  # Increase for large photo collections
+    script:
+      enabled: true
+      size: 2Gi
+
+# Customize MariaDB database
+mariadb:
+  enabled: true
+  
+  # Change database credentials (recommended for production)
+  auth:
+    username: "piwigo_user"
+    password: "ChangeThisSecurePassword123!"
+    database: "piwigo_db"
+  
+  # Adjust database storage
+  persistence:
+    enabled: true
+    size: 20Gi  # Increase based on expected data volume
+  
+  # Match timezone with Piwigo
+  timezone: "Europe/Paris"
+
+# Optional: Add resource limits (recommended for production)
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi

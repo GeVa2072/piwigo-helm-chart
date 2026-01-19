@@ -1,0 +1,17 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "piwigo.mariadb.fullname" . }}
+  labels:
+    {{- include "piwigo.mariadb.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.mariadb.service.type }}
+  ports:
+    - port: {{ .Values.mariadb.service.port }}
+      targetPort: mysql
+      protocol: TCP
+      name: mysql
+  selector:
+    {{- include "piwigo.mariadb.selectorLabels" . | nindent 4 }}
+{{- end }}

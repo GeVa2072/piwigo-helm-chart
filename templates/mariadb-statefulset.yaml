@@ -1,0 +1,66 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "piwigo.mariadb.fullname" . }}
+  labels:
+    {{- include "piwigo.mariadb.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "piwigo.mariadb.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "piwigo.mariadb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "piwigo.mariadb.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: mariadb
+        image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
+        imagePullPolicy: {{ .Values.mariadb.image.pullPolicy }}
+        env:
+        - name: MARIADB_RANDOM_ROOT_PASSWORD
+          value: "{{ .Values.mariadb.auth.randomRootPassword }}"
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "piwigo.mariadb.fullname" . }}-secret
+              key: mariadb-user
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "piwigo.mariadb.fullname" . }}-secret
+              key: mariadb-password
+        - name: MARIADB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "piwigo.mariadb.fullname" . }}-secret
+              key: mariadb-database
+        - name: TZ
+          value: "{{ .Values.mariadb.timezone }}"
+        ports:
+        - name: mysql
+          containerPort: 3306
+          protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+  {{- if .Values.mariadb.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        {{- include "piwigo.mariadb.labels" . | nindent 8 }}
+    spec:
+      accessModes:
+        - {{ .Values.mariadb.persistence.accessMode }}
+      resources:
+        requests:
+          storage: {{ .Values.mariadb.persistence.size }}
+      {{- if .Values.mariadb.persistence.storageClass }}
+      storageClassName: {{ .Values.mariadb.persistence.storageClass }}
+      {{- end }}
+  {{- end }}
+{{- end }}

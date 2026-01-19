@@ -1,0 +1,35 @@
+{{- if .Values.piwigo.persistence.gallery.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "piwigo.fullname" . }}-gallery
+  labels:
+    {{- include "piwigo.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.piwigo.persistence.gallery.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.piwigo.persistence.gallery.size }}
+  {{- if .Values.piwigo.persistence.gallery.storageClass }}
+  storageClassName: {{ .Values.piwigo.persistence.gallery.storageClass }}
+  {{- end }}
+{{- end }}
+---
+{{- if .Values.piwigo.persistence.script.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "piwigo.fullname" . }}-script
+  labels:
+    {{- include "piwigo.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.piwigo.persistence.script.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.piwigo.persistence.script.size }}
+  {{- if .Values.piwigo.persistence.script.storageClass }}
+  storageClassName: {{ .Values.piwigo.persistence.script.storageClass }}
+  {{- end }}
+{{- end }}
